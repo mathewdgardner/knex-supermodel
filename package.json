@@ -49,6 +49,5 @@
   },
   "peerDependencies": {
     "knex": "^0.11.0"
-  },
-  "private": true
+  }
 }

@@ -2,6 +2,7 @@
 
 [![circle](https://circleci.com/gh/mathewdgardner/knex-supermodel.svg?style=svg)](https://circleci.com/gh/mathewdgardner/knex-supermodel)
 [![coverage](https://coveralls.io/repos/github/mathewdgardner/knex-supermodel/badge.svg?branch=master)](https://coveralls.io/github/mathewdgardner/knex-supermodel?branch=master)
+[![npm](https://img.shields.io/npm/v/knex-supermodel.svg?maxAge=2592000)](https://www.npmjs.com/package/knex-supermodel)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/mathewdgardner/knex-supermodel/master/LICENSE)
 
 ## Description

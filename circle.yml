@@ -20,6 +20,7 @@ test:
   override:
     - npm run dc:test:setup
     - npm run dc:test:coverage
+    - echo $(git rev-parse HEAD) > .git/refs/heads/master
     - npm run ci:coveralls
   post:
     - sudo mv coverage $CIRCLE_ARTIFACTS || true
