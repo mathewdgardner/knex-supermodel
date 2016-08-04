@@ -1,0 +1,26 @@
+version: '2'
+services:
+  app:
+    image: mhart/alpine-node:6
+    volumes:
+      - ./:/app
+    working_dir: /app
+    ports:
+      - 3000
+    links:
+      - pg
+    environment:
+      NODE_ENV: development
+      PG_HOST: pg
+      PG_PASSWORD: docker
+      PG_PORT: 5432
+      PG_USER: postgres
+      PORT: 3000
+
+  pg:
+    image: kiasaki/alpine-postgres:9.5
+    ports:
+      - 5432
+    environment:
+      POSTGRES_PASSWORD: docker
+      POSTGRES_USER: postgres

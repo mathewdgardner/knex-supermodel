@@ -1,0 +1,26 @@
+machine:
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+  services:
+    - docker
+  node:
+    version: 6
+
+dependencies:
+  cache_directories:
+    - node_modules
+  pre:
+    - sudo bash -c "curl -L https://github.com/docker/compose/releases/download/1.8.0-rc2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+    - sudo chmod +x /usr/local/bin/docker-compose
+    - docker-compose pull
+  override:
+    - npm install && npm update
+
+test:
+  override:
+    - npm run dc:test:setup
+    - npm run dc:test:coverage
+    - npm run ci:coveralls
+  post:
+    - sudo mv coverage $CIRCLE_ARTIFACTS || true
+    - sudo mv ./npm-debug.log $CIRCLE_ARTIFACTS || true

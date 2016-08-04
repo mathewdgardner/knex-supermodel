@@ -1,0 +1,54 @@
+{
+  "name": "knex-supermodel",
+  "version": "0.1.0",
+  "description": "A thin Knex wrapper that provides a small base model that can be extended and act like a lite ORM.",
+  "main": "index.js",
+  "scripts": {
+    "ci:coveralls": "docker-compose run -e COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN app npm run coveralls",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "dc:test": "docker-compose run app npm run test",
+    "dc:test:coverage": "docker-compose run app npm run test:coverage",
+    "dc:test:create-db": "docker-compose run app npm run test:create-db",
+    "dc:test:migrate": "docker-compose run app npm run test:migrate",
+    "dc:test:setup": "npm run dc:test:create-db; npm run dc:test:migrate",
+    "lint": "eslint . --fix",
+    "posttest": "npm run lint",
+    "test": "NODE_ENV=test mocha",
+    "test:coverage": "istanbul cover _mocha",
+    "test:create-db": "NODE_ENV=test node ./scripts/setup.js",
+    "test:migrate": "NODE_ENV=test node ./scripts/migrate.js",
+    "test:setup": "npm run test:create-db; npm run test:migrate"
+  },
+  "keywords": [
+    "base",
+    "es6",
+    "knex",
+    "model",
+    "node",
+    "orm",
+    "supermodel"
+  ],
+  "author": "Mathew Gardner <mathewdgardner@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "inflection": "^1.10.0",
+    "lodash": "^4.14.1"
+  },
+  "devDependencies": {
+    "bluebird": "^3.4.1",
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.12",
+    "eslint": "^3.2.2",
+    "eslint-plugin-mocha": "^4.3.0",
+    "istanbul": "^0.4.4",
+    "knex": "^0.11.9",
+    "mocha": "^3.0.0",
+    "mocha-lcov-reporter": "^1.2.0",
+    "pg": "^6.0.3",
+    "sinon": "^1.17.5"
+  },
+  "peerDependencies": {
+    "knex": "^0.11.0"
+  },
+  "private": true
+}
