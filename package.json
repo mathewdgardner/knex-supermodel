@@ -2,6 +2,16 @@
   "name": "knex-supermodel",
   "version": "0.1.0",
   "description": "A thin Knex wrapper that provides a small base model that can be extended and act like a lite ORM.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mathewdgardner/knex-supermodel"
+  },
+  "bugs": {
+    "url": "https:://github.com/mathewdgardner/knex-supermodel/issues"
+  },
+  "engines": {
+    "node": ">= 6.0.0"
+  },
   "main": "index.js",
   "scripts": {
     "ci:coveralls": "docker-compose run -e COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN app npm run coveralls",
