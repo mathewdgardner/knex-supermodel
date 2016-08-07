@@ -225,6 +225,46 @@ describe('Base', () => {
       });
     });
 
+    describe('destroy', () => {
+      const props = { foo: 'bar' };
+
+      it('should destroy a model', () => {
+        return knex('models')
+          .insert(props)
+          .then(() => Model.destroy({ foo: 'bar' }, { knex }))
+          .then(() => knex('models').select())
+          .then((res) => {
+            expect(res).to.have.lengthOf(0);
+          });
+      });
+
+      it('should destroy a collection of models', () => {
+        return knex('models')
+          .insert(_.times(100, () => props), '*')
+          .spread(() => Model.destroy({ foo: 'bar' }, { knex }))
+          .then(() => knex('models').select())
+          .then((res) => {
+            expect(res).to.have.lengthOf(0);
+          });
+      });
+
+      it('should destroy a model using a previously set knex', () => {
+        Model.knex = knex;
+
+        return knex('models')
+          .insert(props)
+          .then(() => Model.destroy({ foo: 'bar' }))
+          .then(() => knex('models').select())
+          .then((res) => {
+            expect(res).to.have.lengthOf(0);
+          });
+      });
+
+      it('should not destroy model if no knex object is given', () => {
+        expect(() => Model.destroy(props)).to.throw(/knex/);
+      });
+    });
+
     describe('collection', () => {
       beforeEach(() => {
         return knex('models')
