@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const Base = require('../lib/base');
 const expect = require('chai').expect;
 const knex = require('knex')(require('../knexfile'));
@@ -165,6 +166,65 @@ describe('Base', () => {
       });
     });
 
+    describe('update', () => {
+      const props = { foo: 'bar' };
+      const newProperties = { foo: 'baz' };
+
+      it('should update a singular model', () => {
+        return knex('models')
+          .insert(props, '*')
+          .spread((res) => Model.update(newProperties, { id: res.id }, { knex }))
+          .then((model) => {
+            expect(model).to.be.instanceOf(Model);
+            expect(model.foo).to.equal(newProperties.foo);
+          });
+      });
+
+      it('should update all models', () => {
+        Model.knex = knex;
+
+        return knex('models')
+          .insert(_.times(100, () => props), '*')
+          .spread(() => Model.update(newProperties))
+          .tap((collection) => {
+            expect(collection).to.have.lengthOf(100);
+          })
+          .map((model) => {
+            expect(model).to.be.instanceOf(Model);
+            expect(model.foo).to.equal(newProperties.foo);
+          });
+      });
+
+      it('should update a collection of models', () => {
+        return knex('models')
+          .insert(_.times(100, () => props), '*')
+          .spread(() => Model.update(newProperties, { foo: 'bar' }, { knex }))
+          .tap((collection) => {
+            expect(collection).to.have.lengthOf(100);
+          })
+          .map((model) => {
+            expect(model).to.be.instanceOf(Model);
+            expect(model.foo).to.equal(newProperties.foo);
+          });
+      });
+
+      it('should update a model using a previously set knex', () => {
+        Model.knex = knex;
+
+        return knex('models')
+          .insert(props, '*')
+          .spread((res) => Model.update(newProperties, { id: res.id }))
+          .then((model) => {
+            expect(model).to.be.instanceOf(Model);
+            expect(model.foo).to.equal(newProperties.foo);
+          });
+      });
+
+      it('should not update model if no knex object is given', () => {
+        expect(() => Model.update(newProperties)).to.throw(/knex/);
+      });
+    });
+
     describe('collection', () => {
       beforeEach(() => {
         return knex('models')
@@ -218,41 +278,6 @@ describe('Base', () => {
   });
 
   describe('Instance methods', () => {
-    describe('update', () => {
-      const props = { foo: 'bar' };
-      const newProperties = { foo: 'baz' };
-
-      it('should update a model', () => {
-        let model;
-
-        return Model.create(properties, { knex })
-          .then((m) => {
-            model = m;
-
-            return model.update(newProperties);
-          })
-          .then((m) => {
-            expect(m).to.be.instanceOf(Model);
-            expect(m.id).to.equal(model.id);
-            expect(m.foo).to.equal(newProperties.foo);
-
-            return knex('models')
-              .first()
-              .where('id', model.id);
-          })
-          .then((res) => {
-            expect(res).to.have.property('id', model.id);
-            expect(res).to.have.property('foo', newProperties.foo);
-          });
-      });
-
-      it('should not update model if no knex object is given', () => {
-        const model = new Model(props);
-
-        expect(() => model.update(newProperties)).to.throw(/knex/);
-      });
-    });
-
     describe('save', () => {
       const props = { foo: 'bar' };
 
