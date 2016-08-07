@@ -416,7 +416,7 @@ describe('Base', () => {
 
             return model.save({ knex, method: 'foo' });
           })
-          .then((model) => {
+          .then(() => {
             throw new Error('should not get here');
           })
           .catch((err) => {
