@@ -11,11 +11,91 @@ knex-supermodel is meant to be a very lite but not quite ORM for knex. This is a
 
 This package requires ES6 features only available in node 6.
 
-## Examples
+## Static Examples
 
-##### Saving
+Each subclass will have automatic access to static methods to `create`, `fetch`, `collection`, `forge`, `update` and `destroy`.
 
-Any added properties will become part of the resultant query.
+### Create
+
+When creating, the provided object becomes the properties. After inserting into the database, an instantation of your class is returned.
+
+```javascript
+let user;
+
+User.create({ foo: 'bar' })
+  .then((u) => {
+    user = u;
+  });
+```
+
+### Fetching
+
+When fetching, the provided object becomes the `where` clause with a limit of 1. This results in an instantaion of your class whose properties are loaded from the database.
+
+```javascript
+let user;
+
+User.fetch({ id: '123' })
+  .then((u) => {
+    user = u;
+  });
+```
+
+### Forging
+
+For convenience each model has access to a static `forge` method. Under the hood it is only calling the constructor and returing an instantiation of your class.
+
+```javascript
+const user = User.forge({ foo: 'bar', bar: 'baz' });
+
+console.log(user.foo); // bar
+console.log(user.bar); // baz
+```
+
+### Update
+
+The static method `update` accepts new properties and a knex where clause object and returns to you instantiations of your class. It will return an array if there is more than one, otherwise it just give you the model updated. This is usefull if you are updating by ID.
+
+```javascript
+User.update({ foo: 'baz' }, { id: '123' })
+  .then((user) => {
+    console.log(user.foo); // baz
+  });
+
+User.update({ foo: 'baz' }, { foo: 'bar' })
+  .then((users) => {
+    console.log(user[0].foo); // baz
+    console.log(user[1].foo); // baz
+    console.log(user[2].foo); // baz
+  });
+```
+
+## Destroy
+
+The static method `destroy` accepts a knex where clause object to delete records.
+
+```javascript
+User.destroy({ foo: 'bar' }); // Deletes all users where foo is bar
+```
+
+### Collection
+
+When getting a collection, the provided object becomes the `where` clause. Each member in the collection is an instantation of your class.
+
+```javascript
+let users;
+
+User.collection({ foo: 'bar' })
+  .then((u) => {
+    users = u;
+  });
+```
+
+## Instance Examples
+
+### Saving
+
+Any added properties will become part of the resultant query. By default, the method of saving is `insert` but you may provide `update` as well.
 
 ```javascript
 class User extends require('knex-supermodel') {
@@ -31,80 +111,27 @@ console.log(user.foo); // bar
 console.log(user.bar); // baz
 
 user.save(); // performs insert
+user.save({ method: 'insert' }); // performs insert
+user.save({ method: 'update' }); // performs update
 ```
 
-##### Fetching
+### Destroy
 
-When fetching, the provided object becomes the `where` clause with a limit of 1. This results in an instantaion of your class whose properties are loaded from the database.
-
-```javascript
-let user;
-
-User.fetch({ id: '123' })
-  .then((u) => {
-    user = u;
-  });
-```
-
-##### Collection
-
-When getting a collection, the provided object becomes the `where` clause. Each member in the collection is an instantation of your class.
-
-```javascript
-let users;
-
-User.collection({ foo: 'bar' })
-  .then((u) => {
-    users = u;
-  });
-```
-
-##### Create
-
-When creating, the provided object becomes the properties. After inserting into the database, an instantation of your class is returned.
-
-```javascript
-let user;
-
-User.create({ foo: 'bar' })
-  .then((u) => {
-    user = u;
-  });
-```
-
-##### Update
-
-When updating, the provided object is used to update the record. The same instantation of your class is return after update with its properties updated.
+When deleting, it assumes you want to delete by `id` unless you provide an id object that is in the format of a knex where object.
 
 ```javascript
 User.fetch({ id: '123' })
   .then((user) => {
-    console.log(user.foo); // bar
-
-    return user.update({ foo: 'baz' });
-  })
-  .then((user) => {
-    console.log(user.foo); // baz
-  });
-```
-
-##### Destroy
-
-When deleting, it assumed you want to delete by `id` unless you provide an id object that is in the format of a knex where object.
-
-```javascript
-User.fetch({ id: '123' })
-  .then((user) => {}
     return user.destroy();
   });
 
 User.fetch({ id: '123' })
-  .then((user) => {}
+  .then((user) => {
     return user.destroy({ foo: 'bar', bar: 'baz' });
   });
 ```
 
-##### Transacting
+## Transacting
 
 You may either provide a transacting knex to each method or chain it.
 
