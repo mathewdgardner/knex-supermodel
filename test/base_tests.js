@@ -355,7 +355,7 @@ describe('Base', () => {
     describe('save', () => {
       const props = { foo: 'bar' };
 
-      it('should save a model', () => {
+      it('should save a model by inserting', () => {
         const model = new Model(props);
 
         return model.save({ knex })
@@ -374,6 +374,53 @@ describe('Base', () => {
           .then((res) => {
             expect(res).to.have.property('id', model.id);
             expect(res).to.have.property('foo', props.foo);
+          });
+      });
+
+      it('should save a model by updating', () => {
+        const newProps = { foo: 'baz', bar: 'foo' };
+
+        return knex('models')
+          .insert(props, '*')
+          .spread((res) => {
+            const model = new Model(res);
+            model.foo = newProps.foo;
+            model.bar = newProps.bar;
+
+            return model.save({ knex, method: 'update' });
+          })
+          .then((model) => {
+            expect(model).to.be.instanceOf(Model);
+            expect(model.foo).to.be.equal(newProps.foo);
+            expect(model.bar).to.be.equal(newProps.bar);
+
+            return knex('models')
+              .select();
+          })
+          .then((res) => {
+            expect(res).to.have.lengthOf(1);
+            expect(res[0]).to.have.property('foo', newProps.foo);
+            expect(res[0]).to.have.property('bar', newProps.bar);
+          });
+      });
+
+      it('should not save a model by an unknown method', () => {
+        const newProps = { foo: 'baz', bar: 'foo' };
+
+        return knex('models')
+          .insert(props, '*')
+          .spread((res) => {
+            const model = new Model(res);
+            model.foo = newProps.foo;
+            model.bar = newProps.bar;
+
+            return model.save({ knex, method: 'foo' });
+          })
+          .then((model) => {
+            throw new Error('should not get here');
+          })
+          .catch((err) => {
+            expect(err.message).to.equal('Only the `insert` and `update` methods are allowed while saving.');
           });
       });
 
