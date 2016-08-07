@@ -87,6 +87,40 @@ describe('Base', () => {
       });
     });
 
+    describe('forge', () => {
+      const props = { foo: 'bar', bar: 'baz' };
+
+      it('should forge a new model without inserting', () => {
+        const model = Model.forge(props);
+
+        expect(model).to.be.instanceOf(Model);
+        expect(model.foo).to.equal(props.foo);
+        expect(model.bar).to.equal(props.bar);
+
+        return knex('models')
+          .select()
+          .then((res) => {
+            expect(res).to.have.lengthOf(0);
+          });
+      });
+
+      it('should forge a new model then save', () => {
+        const model = Model.forge(props);
+
+        expect(model).to.be.instanceOf(Model);
+        expect(model.foo).to.equal(props.foo);
+        expect(model.bar).to.equal(props.bar);
+
+        return model.save({ knex })
+          .then(() => knex('models').select())
+          .then((res) => {
+            expect(res).to.have.lengthOf(1);
+            expect(res[0]).to.have.property('foo', props.foo);
+            expect(res[0]).to.have.property('bar', props.bar);
+          });
+      });
+    });
+
     describe('create', () => {
       it('should create a new model and insert it into the database', () => {
         let model;
