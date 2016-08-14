@@ -21,7 +21,7 @@ test:
     - npm run dc:test:setup
     - npm run dc:test:coverage
     - echo $(git rev-parse HEAD) > .git/refs/heads/$CIRCLE_BRANCH
-    - npm run ci:coveralls
+    - if [ "$CIRCLE_BRANCH" == master ]; then npm run ci:coveralls; fi
   post:
     - sudo mv coverage $CIRCLE_ARTIFACTS || true
     - sudo mv ./npm-debug.log $CIRCLE_ARTIFACTS || true
