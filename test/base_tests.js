@@ -198,6 +198,13 @@ describe('Base', () => {
       it('should not get model if no knex object is given', () => {
         expect(() => Model.fetch({ id: 'uuid' })).to.throw(/knex/);
       });
+
+      it('should return null if no model is found', () => {
+        return Model.fetch({ id: '1A00360F-0A4B-446E-9630-DF0D36419119' }, { knex })
+          .then((model) => {
+            expect(model).to.be.null;
+          });
+      });
     });
 
     describe('update', () => {
