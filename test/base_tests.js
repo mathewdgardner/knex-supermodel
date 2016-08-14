@@ -87,6 +87,17 @@ describe('Base', () => {
       });
     });
 
+    describe('get / set table', () => {
+      it('should get the table being used', () => {
+        expect(Model.table).to.equal('models');
+      });
+
+      it('should set the table to be used', () => {
+        Model.table = 'models';
+        expect(Model).to.have.property('_table', 'models');
+      });
+    });
+
     describe('forge', () => {
       const props = { foo: 'bar', bar: 'baz' };
 
