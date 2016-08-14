@@ -24,7 +24,7 @@
     "lint": "eslint . --fix",
     "posttest": "npm run lint",
     "test": "NODE_ENV=test mocha",
-    "test:coverage": "NODE_ENV=test istanbul cover _mocha && npm run lint",
+    "test:coverage": "NODE_ENV=test istanbul cover _mocha && istanbul check-coverage && npm run lint",
     "test:create-db": "NODE_ENV=test node ./scripts/setup.js",
     "test:migrate": "NODE_ENV=test node ./scripts/migrate.js",
     "test:setup": "npm run test:create-db; npm run test:migrate"
