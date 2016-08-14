@@ -214,8 +214,8 @@ describe('Base', () => {
       it('should update a singular model', () => {
         return knex('models')
           .insert(props, '*')
-          .spread((res) => Model.update(newProperties, { id: res.id }, { knex, single: true }))
-          .then((model) => {
+          .spread((res) => Model.update(newProperties, { id: res.id }, { knex }))
+          .spread((model) => {
             expect(model).to.be.instanceOf(Model);
             expect(model.foo).to.equal(newProperties.foo);
           });
@@ -254,8 +254,8 @@ describe('Base', () => {
 
         return knex('models')
           .insert(props, '*')
-          .spread((res) => Model.update(newProperties, { id: res.id }, { single: true }))
-          .then((model) => {
+          .spread((res) => Model.update(newProperties, { id: res.id }))
+          .spread((model) => {
             expect(model).to.be.instanceOf(Model);
             expect(model.foo).to.equal(newProperties.foo);
           });
