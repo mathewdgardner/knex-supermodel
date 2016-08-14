@@ -7,7 +7,7 @@
 
 ## Description
 
-knex-supermodel is meant to be a very lite but not quite ORM for knex. This is accomplished by providing a base model that is simply an ES6 class that you extend in your own models. You can override the provided methods or even add to them to make your own. Each method will always return your model back to you, except in the obvious case of `collection`!
+knex-supermodel is meant to be a very lite but not quite an ORM for knex. This is accomplished by providing a base model that is simply an ES6 class that you extend in your own models. You can override the provided methods or even add to them to make your own. Each method will always return your model back to you, except in the obvious case of `collection`!
 
 This package requires ES6 features only available in node 6.
 
