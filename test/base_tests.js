@@ -15,6 +15,8 @@ describe('Base', () => {
 
   beforeEach(() => {
     Base.knex = null;
+    delete Model._keys;
+
     return Utils.clear(knex);
   });
 
@@ -474,10 +476,16 @@ describe('Base', () => {
 
     describe('destroy', () => {
       it('should delete a model', () => {
+        let model;
+
         return Model.create(properties, { knex })
-          .then((model) => model.destroy())
-          .then((model) => {
-            expect(model).to.be.instanceOf(Model);
+          .then((m) => {
+            model = m;
+
+            return model.destroy();
+          })
+          .then((res) => {
+            expect(res).to.equal(1);
 
             return knex('models')
               .select()
@@ -489,10 +497,38 @@ describe('Base', () => {
       });
 
       it('should delete a model with provided query', () => {
+        let model;
+
         return Model.create(properties, { knex })
-          .then((model) => model.destroy({ foo: 'bar' }))
-          .then((model) => {
-            expect(model).to.be.instanceOf(Model);
+          .then((m) => {
+            model = m;
+
+            return model.destroy({ foo: 'bar' });
+          })
+          .then((res) => {
+            expect(res).to.equal(1);
+
+            return knex('models')
+              .select()
+              .where('id', model.id);
+          })
+          .then((res) => {
+            expect(res).to.have.property('length', 0);
+          });
+      });
+
+      it('should delete a model using the model\'s keys', () => {
+        let model;
+        Model.keys = [ 'id' ];
+
+        return Model.create(properties, { knex })
+          .then((m) => {
+            model = m;
+
+            return model.destroy();
+          })
+          .then((res) => {
+            expect(res).to.equal(1);
 
             return knex('models')
               .select()

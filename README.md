@@ -57,11 +57,6 @@ console.log(user.bar); // baz
 The static method `update` accepts new properties and a knex where clause object and returns to you instantiations of your class. It will return an array if there is more than one, otherwise it just give you the model updated. This is usefull if you are updating by ID.
 
 ```javascript
-User.update({ foo: 'baz' }, { id: '123' })
-  .then((user) => {
-    console.log(user.foo); // baz
-  });
-
 User.update({ foo: 'baz' }, { foo: 'bar' })
   .then((users) => {
     console.log(user[0].foo); // baz
@@ -75,7 +70,10 @@ User.update({ foo: 'baz' }, { foo: 'bar' })
 The static method `destroy` accepts a knex where clause object to delete records.
 
 ```javascript
-User.destroy({ foo: 'bar' }); // Deletes all users where foo is bar
+User.destroy({ foo: 'bar' }) // Deletes all users where foo is bar
+  .then((res) => {
+    console.log(res); // 1
+  });
 ```
 
 ### Collection
@@ -117,17 +115,26 @@ user.save({ method: 'update' }); // performs update
 
 ### Destroy
 
-When deleting, it assumes you want to delete by `id` unless you provide an id object that is in the format of a knex where object.
+When deleting, it assumes you want to delete by `id` unless you previously have set keys on the static model. These keys, if present, will be used to uniquely identify the model for deletion.
 
 ```javascript
 User.fetch({ id: '123' })
-  .then((user) => {
-    return user.destroy();
+  .then((user) => user.destroy())
+  .then((res) => {
+    console.log(res); // 1
   });
 
 User.fetch({ id: '123' })
-  .then((user) => {
-    return user.destroy({ foo: 'bar', bar: 'baz' });
+  .then((user) => user.destroy())
+  .then((res) => {
+    console.log(res); // 1
+  });
+
+User.keys = [ 'foo' ];
+User.fetch({ foo: 'bar' })
+  .then((user) => user.destroy())
+  .then((res) => {
+    console.log(res); // 1
   });
 ```
 
