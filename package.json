@@ -1,6 +1,6 @@
 {
   "name": "knex-supermodel",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "A thin Knex wrapper that provides a small base model that can be extended and act like a lite ORM.",
   "repository": {
     "type": "git",
