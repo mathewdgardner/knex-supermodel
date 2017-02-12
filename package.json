@@ -20,7 +20,7 @@
     "dc:test:coverage": "docker-compose run app npm run test:coverage",
     "dc:test:create-db": "docker-compose run app npm run test:create-db",
     "dc:test:migrate": "docker-compose run app npm run test:migrate",
-    "dc:test:setup": "npm run dc:test:create-db; npm run dc:test:migrate",
+    "dc:test:setup": "npm run dc:test:create-db && npm run dc:test:migrate",
     "lint": "eslint . --fix",
     "posttest": "npm run lint",
     "test": "NODE_ENV=test mocha",
@@ -57,7 +57,7 @@
     "eslint": "^3.2.2",
     "eslint-plugin-mocha": "^4.3.0",
     "istanbul": "^0.4.4",
-    "knex": "^0.11.9",
+    "knex": "^0.12.6",
     "lodash": "^4.14.1",
     "mocha": "^3.0.0",
     "mocha-lcov-reporter": "^1.2.0",
@@ -65,6 +65,6 @@
     "sinon": "^1.17.5"
   },
   "peerDependencies": {
-    "knex": "^0.11.0"
+    "knex": ">= 0.11.0"
   }
 }
