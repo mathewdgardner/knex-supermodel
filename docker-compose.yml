@@ -1,7 +1,7 @@
 version: '2'
 services:
   app:
-    image: mhart/alpine-node:6
+    image: mhart/alpine-node:7
     volumes:
       - ./:/app
     working_dir: /app
@@ -18,7 +18,7 @@ services:
       PORT: 3000
 
   pg:
-    image: kiasaki/alpine-postgres:9.5
+    image: kiasaki/alpine-postgres:9.6
     ports:
       - 5432
     environment:

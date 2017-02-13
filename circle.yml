@@ -18,8 +18,7 @@ dependencies:
 
 test:
   override:
-    - npm run dc:test:setup
-    - npm run dc:test:coverage
+    - npm run dc:test:setup && npm run dc:test:coverage
     - echo $(git rev-parse HEAD) > .git/refs/heads/$CIRCLE_BRANCH
     - if [ "$CIRCLE_BRANCH" == master ]; then npm run ci:coveralls; fi
   post:
